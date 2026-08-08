@@ -4,7 +4,7 @@ Bu proje; bir e-ticaret sistemindeki **Sanal POS**, **3D Secure doğrulama**, **
 
 ---
 
-## 📁 Proje Mimari Yapısı (Project Architecture)
+## Proje Mimari Yapısı (Project Architecture)
 
 ```text
 PaymentGatewayService/
