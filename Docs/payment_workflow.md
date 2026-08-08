@@ -1,22 +1,25 @@
-# 3D Secure Ödeme & Provizyon Akış Diyagramı
+# 3D Secure Odeme ve Provizyon Akis Diyagrami
 
-mermaid
-graph TD
-A[Müşteri Kart Bilgilerini Girer] --> B[BIN Sorgusu: BinLookupService]
-B --> C{Kart Tipi Nedir?}
-C -- Banka Kartı (Debit) & Taksit > 1 --> D[Hata: Banka kartına taksit yapılamaz]
-C -- Kredi Kartı --> E{Tutar >= 3000 TL mi?}
+Bu dokuman, PaymentGatewayService icerisindeki 3D Secure ve kart kısıt kurallarını gorsellestirmektedir.
 
-E -- Evet --> F[3D Secure Zorunlu: Banka OTP Sayfasına Yönlendir]
-E -- Hayır --> G{Müşteri 3DS Seçti mi?}
-
-G -- Evet --> F
-G -- Hayır --> H[Doğrudan Provizyon İsteği (Direct API)]
-
-F --> I{OTP SMS Doğrulaması Başarılı mı?}
-I -- Hayır --> J[Ödeme Reddedildi: 3DS Hatalı]
-I -- Evet --> H
-
-H --> K{Banka Yanıtı}
-K -- Yetersiz Bakiye (Code: 51) --> L[Ödeme Reddedildi]
-K -- Onaylandı (Code: 00) --> M[Sipariş Onaylandı: AuthCode Üretildi]
+```mermaid
+flowchart TD
+    A[Musteri Kart Bilgilerini Girer] --> B[BIN Sorgusu Yapilir]
+    
+    B --> C{Kart Tipi Nedir?}
+    C -- Banka Kartı ve Taksit Var --> D[Hata: Banka kartina taksit yapilamaz]
+    C -- Kredi Kartı --> E{Tutar 3000 TL uzeri mi?}
+    
+    E -- Evet --> F[3D Secure Sayfasina Yonlendir]
+    E -- Hayir --> G{Musteri 3D Secure Secti mi?}
+    
+    G -- Evet --> F
+    G -- Hayir --> H[Bankaya Dogrudan Odeme Istegi At]
+    
+    F --> I{SMS Kodu Dogru mu?}
+    I -- Hayir --> J[Odeme Reddedildi]
+    I -- Evet --> H
+    
+    H --> K{Banka Yaniti}
+    K -- Yetersiz Bakiye --> L[Odeme Reddedildi]
+    K -- Onaylandi --> M[Siparis Onaylandi]
